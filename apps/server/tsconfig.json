@@ -1,0 +1,23 @@
+{
+  "compilerOptions": {
+    "lib": ["ES2015"],
+    "module": "CommonJS",
+    "outDir": "./dist",
+    "rootDir": "./src",
+    "baseUrl": "./src/",
+    "strictPropertyInitialization": false,
+    "experimentalDecorators": true
+  },
+  "exclude": ["node_modules"],
+  "extends": "tsconfig/base.json",
+  "paths": {
+    "@utils/*": ["./src/utils/*"],
+    "@route/*": ["./src/route/*"],
+    "@controller/*": ["./src/controller/*"],
+    "@model/*": ["./src/model/*"],
+    "@service/*": ["./src/service/*"],
+    "middleware/*": ["./src/middleware/*"],
+    "types/*": ["./src/types/*"]
+  },
+  "include": ["src"]
+}

@@ -1,0 +1,37 @@
+import {
+  deleteNote,
+  findNotes,
+  insertNote,
+  updateNote,
+} from 'service'
+import { Note } from 'shared-types'
+import {
+  CustomRouteFunction,
+  JWTPayload,
+} from 'types'
+
+export const getNotes: CustomRouteFunction = async (req, response) => {
+  const user = req.user as JWTPayload
+  const notes = await findNotes({ user: user._id })
+  response.json(notes)
+}
+export const deleteNoteHandler: CustomRouteFunction<
+  unknown,
+  Pick<Note, '_id'>
+> = async (req, res) => {
+  const note = await deleteNote(req.params._id)
+  res.json(note)
+}
+export const updateNoteHandler: CustomRouteFunction<
+  Omit<Note, '_id' | 'user'>,
+  Pick<Note, '_id'>
+> = async (req, res) => {
+  const note = await updateNote({ _id: req.params._id }, req.body)
+  res.json(note)
+}
+export const createNoteHandler: CustomRouteFunction<
+  Omit<Note, '_id' | 'starred'>
+> = async (req, res) => {
+  const note = await insertNote(req.body)
+  res.json(note)
+}
