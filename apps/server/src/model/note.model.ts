@@ -1,5 +1,6 @@
 import { Document, model, Schema } from 'mongoose'
-import { Note } from 'shared-types'
+
+import { Note } from '../../../../packages/shared-types/src'
 
 export type NoteDocument = Note & Document
 const noteSchema = new Schema(

@@ -1,10 +1,11 @@
 import { FC, useEffect } from 'react'
 
 import { SubmitHandler, useForm } from 'react-hook-form'
-import { Note, NoteSchema } from 'shared-types'
 import { initTE, Input, Ripple } from 'tw-elements'
 
 import { zodResolver } from '@hookform/resolvers/zod'
+
+import { Note, NoteSchema } from '../../../../packages/shared-types/src'
 
 type Props = {
   note?: Pick<Note, 'title' | 'body'>

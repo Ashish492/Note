@@ -1,6 +1,6 @@
 import config from 'config'
 import createHttpError from 'http-errors'
-import { omit } from 'lodash'
+import { pick } from 'lodash'
 import { findByEmail } from 'service'
 import { User } from 'shared-types'
 import { CustomRouteFunction } from 'types'
@@ -10,12 +10,12 @@ export const loginHandler: CustomRouteFunction<
   Pick<User, 'email' | 'password'>
 > = async (req, res) => {
   // validate  the user's password
-
   try {
     const user = await findByEmail(req.body.email)
     if (!user) throw new Error()
     if (!user.comparePassword(req.body.password)) throw new Error('')
-    const payload = omit(user, ['password', 'name'])
+    const payload = pick(user.toObject(), ['_id', 'email'])
+    console.log(payload)
     const accessToken = await signJWT(payload, {
       expiresIn: config.get('accessTokenTtl'),
     })
@@ -28,10 +28,9 @@ export const loginHandler: CustomRouteFunction<
     })
     res.send({ accessToken, user: payload })
   } catch (error) {
-    throw createHttpError(401, 'invalid email or password')
+    console.error(error)
+    throw createHttpError(403, 'invalid email or password')
   }
-
-  res.send
 }
 export const issueToken: CustomRouteFunction = async (req, res) => {
   const { refreshToken } = req.signedCookies
@@ -49,4 +48,19 @@ export const issueToken: CustomRouteFunction = async (req, res) => {
     }
   }
   throw new createHttpError[401]()
+}
+export const validateToken: CustomRouteFunction = async (req, res) => {
+  const authHeader = req.headers.authorization
+  if (authHeader && authHeader.startsWith('Bearer ')) {
+    const token = authHeader.substring(7) // Remove 'Bearer ' from the beginning of the header value
+    let payload = await verifyJwt(token)
+    if (payload.valid) {
+      res.json(payload.decoded)
+    } else {
+      throw new createHttpError[401]()
+    }
+  } else {
+    // No Bearer token found in the headers
+    throw new createHttpError[401]()
+  }
 }

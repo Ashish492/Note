@@ -1,11 +1,21 @@
 import { RouteObject } from 'react-router-dom'
 
 import Auth from '../app/features/auth/Auth'
-import { AddNotePages, LoginPages, NotePages, RegisterPages } from '../pages'
+import {
+  AddNotePages,
+  HomePages,
+  LoginPages,
+  NotePages,
+  RegisterPages,
+} from '../pages'
 import ErrorElement from './Error.pages'
 import Layout from './Layout'
 
 const children: RouteObject[] = [
+  {
+    element: <HomePages />,
+    index: true,
+  },
   {
     path: '/user',
     children: [

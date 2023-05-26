@@ -49,4 +49,5 @@ KQIDAQAB
 -----END PUBLIC KEY-----
 `,
   cookieSecret: 'b26837a0b19ff302c503dca3a0ea1329',
+  secretKey: `b26837a0b19ff302c503dca3a0ea1329`,
 }

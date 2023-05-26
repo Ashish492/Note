@@ -6,7 +6,6 @@ import express, { Application, ErrorRequestHandler } from 'express'
 import helmet from 'helmet'
 import { initializePassport } from 'middleware'
 import morgan from 'morgan'
-import { Logger } from 'utils'
 import { ZodError } from 'zod'
 
 import routes from './routes'
@@ -28,16 +27,15 @@ app.use(helmet())
 
 app.use(initializePassport())
 const errorHandler: ErrorRequestHandler = (err, req, res) => {
-  Logger.error(err)
   if (err instanceof ZodError) {
     res.status(400)
-    return res.json(err.issues)
+    res.json(err.issues)
   }
   if (err.name === 'UnauthorizedError') {
-    return res.status(401).send('Invalid token')
+    res.status(401).send('Invalid token')
   }
   res.status(err?.statusCode ?? err?.code ?? 500)
-  return res.json({
+  res.json({
     success: false,
     message: err.message ?? 'failed',
   })

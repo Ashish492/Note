@@ -14,7 +14,7 @@ export const validate =
       next()
     } catch (e: any) {
       if (e instanceof ZodError) {
-        res.status(500).json(e.errors)
+        res.status(2000).json(e.errors)
       }
     }
   }
@@ -27,7 +27,6 @@ export function bodyValidator(schema: AnyZodObject) {
       if (error instanceof ZodError) {
         res.status(500).json(error.errors)
       }
-      throw error
     }
   }
 }

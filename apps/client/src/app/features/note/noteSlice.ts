@@ -1,5 +1,4 @@
-import { Note } from 'shared-types'
-
+import { Note } from '../../../../../../packages/shared-types/src'
 import { apiSlice } from '../api/apiSlice'
 
 const noteApi = apiSlice

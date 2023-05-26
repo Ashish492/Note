@@ -1,5 +1,6 @@
 import config from 'config'
 import http from 'http'
+import connectToDB from 'utils/connectToDB'
 import logger from 'utils/logger'
 
 import app from './server'
@@ -7,7 +8,7 @@ import app from './server'
 const start = async () => {
   const PORT = config.get<number>('port')
   try {
-    // await connectToDB()
+    await connectToDB()
     const server = http.createServer(app)
     server.listen(PORT, () => {
       logger.info(`server running on http://localhost:${PORT}`)

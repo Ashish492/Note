@@ -2,11 +2,11 @@ import { FC, useEffect } from 'react'
 
 import { SubmitHandler, useForm } from 'react-hook-form'
 import { Link } from 'react-router-dom'
-import { User, userSchema } from 'shared-types'
 import { initTE, Input, Ripple } from 'tw-elements'
 
 import { zodResolver } from '@hookform/resolvers/zod'
 
+import { User, userSchema } from '../../../../packages/shared-types/src'
 import { setAlert } from '../app/features/alert'
 import { useAddUserMutation } from '../app/features/user'
 import { useAppDispatch } from '../hook'
@@ -15,29 +15,26 @@ type Props = {}
 
 const RegisterForm: FC<Props> = props => {
   const dispatch = useAppDispatch()
-  const [createUser, { isError, error, isSuccess, data: response }] =
-    useAddUserMutation()
+  const [createUser, result] = useAddUserMutation()
   const UserFormSchema = userSchema.omit({ _id: true })
   type UserFormType = Omit<User, '_id'>
   const onSubmit: SubmitHandler<UserFormType> = async data => {
-    try {
-      console.log(response)
-      await createUser(data).unwrap()
-      if (isError) {
-        console.log(error)
-        dispatch(setAlert({ message: (error as Error).message, type: 'error' }))
-      }
-      if (isSuccess)
-        dispatch(
-          setAlert({
-            message: `user ${data.name} added`,
-            type: 'success',
-          }),
-        )
-    } catch (error) {
-      console.log(error)
-      dispatch(setAlert({ message: (error as Error).message, type: 'error' }))
+    await createUser(data)
+    if (result.isError) {
+      dispatch(
+        setAlert({
+          message: (result.error as any).data.message,
+          type: 'error',
+        }),
+      )
     }
+    if (result.isSuccess)
+      dispatch(
+        setAlert({
+          message: `user ${data.name} added`,
+          type: 'success',
+        }),
+      )
   }
   const {
     register,
@@ -207,6 +204,12 @@ const RegisterForm: FC<Props> = props => {
                     data-te-ripple-color="light"
                   >
                     sign up
+                    {result.isLoading && (
+                      <span
+                        className="ml-4 inline-block h-4 w-4 animate-spin rounded-full border-4 border-solid border-current border-r-transparent align-[-0.125em] motion-reduce:animate-[spin_1.5s_linear_infinite]"
+                        role="status"
+                      ></span>
+                    )}
                   </button>
 
                   {/* Register link */}

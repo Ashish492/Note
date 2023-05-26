@@ -1,14 +1,7 @@
-import {
-  deleteNote,
-  findNotes,
-  insertNote,
-  updateNote,
-} from 'service'
-import { Note } from 'shared-types'
-import {
-  CustomRouteFunction,
-  JWTPayload,
-} from 'types'
+import { deleteNote, findNotes, insertNote, updateNote } from 'service'
+import { CustomRouteFunction, JWTPayload } from 'types'
+
+import { Note } from '../../../../packages/shared-types/src'
 
 export const getNotes: CustomRouteFunction = async (req, response) => {
   const user = req.user as JWTPayload

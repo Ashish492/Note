@@ -1,13 +1,9 @@
-import {
-  NoteDocument,
-  NoteModel,
-} from 'model'
-import {
-  FilterQuery,
-  UpdateQuery,
-} from 'mongoose'
-import { Note } from 'shared-types'
+import { NoteDocument, NoteModel } from 'model'
+import { FilterQuery, UpdateQuery } from 'mongoose'
 import { runService } from 'utils'
+
+import { Note } from '../../../../packages/shared-types/src'
+
 export const insertNote = async (note: Omit<Note, '_id' | 'starred'>) => {
   return runService(() => NoteModel.create(note), 'unable to add note')
 }

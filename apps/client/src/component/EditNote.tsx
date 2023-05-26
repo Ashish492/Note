@@ -1,8 +1,8 @@
 import { FC } from 'react'
 
 import { SubmitHandler } from 'react-hook-form'
-import { Note } from 'shared-types'
 
+import { Note } from '../../../../packages/shared-types/src'
 import NoteForm from './NoteForm'
 
 type Props = {

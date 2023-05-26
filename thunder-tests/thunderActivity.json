@@ -1,1 +1,25 @@
-[]
+[
+  {
+    "_id": "e23ef295-8bc6-46e8-b154-1452148662b0",
+    "colId": "history",
+    "containerId": "",
+    "name": "http://localhost:5000/user",
+    "url": "http://localhost:5000/auth/validate",
+    "method": "GET",
+    "sortNum": 0,
+    "created": "2023-05-25T03:40:23.614Z",
+    "modified": "2023-05-26T13:21:57.747Z",
+    "headers": [],
+    "params": [],
+    "body": {
+      "type": "json",
+      "raw": "\n{\n\"email\": \"swetashrestha@gmail.com\",\n\"password\":\"Sweta@s1511\"\n}",
+      "form": []
+    },
+    "auth": {
+      "type": "bearer",
+      "bearer": "eyJhbGciOiJSUzI1NiIsInR5cCI6IkpXVCJ9.eyJfaWQiOiI2NDcwYTljNzcwNDI0NzA0ODMxNGI2MzYiLCJlbWFpbCI6InN3ZXRhc2hyZXN0aGFAZ21haWwuY29tIiwiaWF0IjoxNjg1MTA3MjcxLCJleHAiOjE2ODUxMDgxNzF9.q1CW04b9OqmbzBBzHnLJvPafZeC_ASisfRGWw8oms0FbyrUgf5GalprZDklEo5t4k8l7oH6qM4w8DkYwlbFSc9Rq0Ls8TowMUGAxWxfZwpDzQxUrzqIn47U3_BFXeS1JLFvkAGLExYge5WiO7O25XfrkaIvgLL8j7qRSclwAu6bjYHnFIJw1LZWdQGnlHlTxDtHeL024lv-fjX2ZlPGNBu-ufNUwhC2UWHix1hUwYVq0TVkrLz5BcOvKNjtKdaJvvUQbsBVtponKiYW5yQwiD1xi3XVp286huQkiHAknhXiVfhx3hBBz_kRuFGkgMNb-SO-TansCjnBmDShxoXVU3g"
+    },
+    "tests": []
+  }
+]

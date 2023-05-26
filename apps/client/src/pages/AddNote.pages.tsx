@@ -1,8 +1,8 @@
 import { FC } from 'react'
 
 import { SubmitHandler } from 'react-hook-form'
-import { Note } from 'shared-types'
 
+import { Note } from '../../../../packages/shared-types/src'
 import { setAlert } from '../app/features/alert'
 import { authSelector } from '../app/features/auth/authSlice'
 import { useAddNoteMutation } from '../app/features/note/noteSlice'

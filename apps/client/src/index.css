@@ -12,3 +12,9 @@
 .active {
   @apply opacity-100;
 }
+@layer base {
+  button:disabled {
+    cursor: not-allowed;
+    opacity: 0.4;
+  }
+}

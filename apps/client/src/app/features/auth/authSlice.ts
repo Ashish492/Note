@@ -1,7 +1,6 @@
-import { User } from 'shared-types'
-
 import { createAsyncThunk, createSlice, PayloadAction } from '@reduxjs/toolkit'
 
+import { User } from '../../../../../../packages/shared-types/src'
 import { deleteCookie, saveToCookie } from '../../../utils'
 import { RootState } from '../../store'
 

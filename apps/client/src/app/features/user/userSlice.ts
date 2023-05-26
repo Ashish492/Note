@@ -22,11 +22,10 @@ export const userApi = apiSlice
         Omit<User, '_id' | 'name'>
       >({
         query: user => ({
-          url: '/user',
+          url: '/auth/login',
           body: user,
           method: 'post',
         }),
-        invalidatesTags: [{ type: 'user', id: 'LIST' }],
       }),
     }),
   })

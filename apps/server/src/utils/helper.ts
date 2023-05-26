@@ -1,7 +1,9 @@
 import { NextFunction, Request, Response } from 'express'
 import * as core from 'express-serve-static-core'
 import createHttpError from 'http-errors'
+
 import { CustomRouteFunction, MyRequest } from '../types'
+
 type basicFun<
   P extends core.ParamsDictionary = {},
   Q extends qs.ParsedQs = {},
@@ -16,7 +18,13 @@ export function customRouteFunction<
   Q extends qs.ParsedQs,
 >(fn: CustomRouteFunction<B, P, Q>): basicFun<P, Q> {
   return (req, res, next) => {
-    fn(req as MyRequest<B, P, Q>, res, next).catch(next)
+    fn(req as MyRequest<B, P, Q>, res, next).catch((err: any) => {
+      res.status(err?.statusCode ?? err?.code ?? 500)
+      res.json({
+        success: false,
+        message: err.message ?? 'failed',
+      })
+    })
   }
 }
 export const runService = async <T>(
@@ -26,6 +34,8 @@ export const runService = async <T>(
   try {
     return await fn()
   } catch (error) {
+    console.log(error)
+
     throw createHttpError(500, msg ?? 'internal server Error', { cause: error })
   }
 }

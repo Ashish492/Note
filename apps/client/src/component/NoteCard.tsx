@@ -1,6 +1,6 @@
 import { FC } from 'react'
 
-import { Note } from 'shared-types'
+import { Note } from '../../../../packages/shared-types/src'
 
 type Props = {
   note: Note
