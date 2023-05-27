@@ -5,14 +5,17 @@ import { Note } from '../../../../packages/shared-types/src'
 
 export const getNotes: CustomRouteFunction = async (req, response) => {
   const user = req.user as JWTPayload
+  console.log(user)
+
   const notes = await findNotes({ user: user._id })
-  response.json(notes)
+  response.json(notes ?? [])
 }
 export const deleteNoteHandler: CustomRouteFunction<
   unknown,
   Pick<Note, '_id'>
 > = async (req, res) => {
   const note = await deleteNote(req.params._id)
+
   res.json(note)
 }
 export const updateNoteHandler: CustomRouteFunction<

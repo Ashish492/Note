@@ -6,9 +6,8 @@ import {
 } from 'controller'
 import { Router } from 'express'
 import { bodyValidator } from 'middleware'
+import { NoteSchema } from 'shared-types'
 import { customRouteFunction } from 'utils'
-
-import { NoteSchema } from '../../../../packages/shared-types/src'
 
 const noteRouter = Router()
 noteRouter

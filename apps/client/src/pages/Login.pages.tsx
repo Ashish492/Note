@@ -25,8 +25,6 @@ const Login: FC<Props> = props => {
     delete data.remember
     await login(data)
     if (isError) {
-      console.log(error)
-
       dispatch(
         setAlert({
           message: (error as any)?.data?.message ?? 'server error',
@@ -35,8 +33,10 @@ const Login: FC<Props> = props => {
       )
     }
     if (isSuccess) {
-      if (result) setAuth({ token: result?.accessToken, user: result?.user })
-      navigate('/note')
+      if (result) {
+        dispatch(setAuth({ token: result?.accessToken, user: result?.user }))
+        navigate('/note')
+      }
     }
   }
   return (

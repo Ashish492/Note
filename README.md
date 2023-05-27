@@ -7,3 +7,4 @@
 /auth
 --/login
 --/refresh
+--/validate

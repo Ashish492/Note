@@ -35,19 +35,24 @@ export const loginHandler: CustomRouteFunction<
 export const issueToken: CustomRouteFunction = async (req, res) => {
   const { refreshToken } = req.signedCookies
   console.log(refreshToken)
-  if (!refreshToken) throw new createHttpError[401]()
+  if (!refreshToken) throw new createHttpError[403]()
   const { decoded, valid } = await verifyJwt(refreshToken)
   if (valid && decoded) {
     const user = await findByEmail(decoded.email)
     if (user) {
-      const accessToken = signJWT(decoded, {
+      let payload = pick(user?.toObject(), ['email', '_id'])
+      const accessToken = await signJWT(payload, {
         algorithm: 'RS256',
         expiresIn: config.get('accessTokenTtl'),
       })
       return res.json({ token: accessToken, user: decoded })
     }
   }
-  throw new createHttpError[401]()
+  throw new createHttpError[403]()
+}
+export const logOut: CustomRouteFunction = async (req, res) => {
+  res.clearCookie('refreshToken')
+  res.json({ success: true, msg: 'logout successfully' })
 }
 export const validateToken: CustomRouteFunction = async (req, res) => {
   const authHeader = req.headers.authorization
@@ -61,6 +66,6 @@ export const validateToken: CustomRouteFunction = async (req, res) => {
     }
   } else {
     // No Bearer token found in the headers
-    throw new createHttpError[401]()
+    throw new createHttpError[403]()
   }
 }

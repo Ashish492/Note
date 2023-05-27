@@ -1,7 +1,10 @@
-import { createAsyncThunk, createSlice, PayloadAction } from '@reduxjs/toolkit'
+import { User } from 'shared-types'
 
-import { User } from '../../../../../../packages/shared-types/src'
-import { deleteCookie, saveToCookie } from '../../../utils'
+import {
+  createSlice,
+  PayloadAction,
+} from '@reduxjs/toolkit'
+
 import { RootState } from '../../store'
 
 export type Auth = {
@@ -19,42 +22,34 @@ const authSlice = createSlice({
   initialState,
   reducers: {
     setAuth: (state, action: PayloadAction<Omit<Auth, 'validLogin'>>) => {
+      alert('called')
+      localStorage.setItem('token', action.payload.token!)
+      console.log(action.payload)
       state.token = action.payload.token
       state.user = action.payload.user
-      saveToCookie('token', action.payload.token!)
+      state.validLogin = true
     },
     logOut: state => {
       state.token = null
       state.user = null
-      deleteCookie('token')
+      state.validLogin = false
+      localStorage.removeItem('token')
+    },
+    checkLogin: state => {
+      const token = localStorage.getItem('token')
+      if (token) {
+        state.token = token
+        state.validLogin = true
+      } else {
+        state.token = null
+        state.validLogin = false
+      }
     },
   },
-  extraReducers: builder =>
-    builder.addCase(checkLogin.fulfilled, (state, action) => {
-      state.token = action.payload.token
-      state.user = action.payload.user
-      state.validLogin = true
-    }),
-})
-export const checkLogin = createAsyncThunk<{
-  token: string
-  user: Omit<User, 'password'>
-}>('auth/checkLogin', async (data, thunkApi) => {
-  try {
-    alert(1)
-    const response = await fetch('http://localhost:5000/auth/refresh', {
-      credentials: 'include',
-    })
-    if (response.status != 200) throw new Error(response.statusText)
-    return await response.json()
-  } catch (error) {
-    thunkApi.dispatch(logOut)
-    throw thunkApi.rejectWithValue((error as Error).message)
-  }
 })
 
 export const authSelector = (state: RootState) => {
   return state.auth
 }
-export const { logOut, setAuth } = authSlice.actions
+export const { logOut, setAuth,checkLogin } = authSlice.actions
 export const authReducer = authSlice.reducer

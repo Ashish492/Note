@@ -11,17 +11,16 @@ export const signJWT = async (
     ...options,
     algorithm: 'RS256',
   })
-
 export const verifyJwt = async (token: string) => {
   try {
     const decoded = (await jwt.verify(token, config.get<string>('publicKey'), {
       algorithms: ['RS256'],
     })) as JWTPayload
     return { decoded, expired: false, valid: true }
-  } catch (error: any) {
+  } catch (error: unknown) {
     return {
       valid: false,
-      expired: error.message === 'jwt expired',
+      expired: (<Error>error).message === 'jwt expired',
       decoded: null,
     }
   }

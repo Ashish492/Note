@@ -1,13 +1,28 @@
 import { FC } from 'react'
 
-import { NavLink } from 'react-router-dom'
+import { NavLink, useNavigate } from 'react-router-dom'
 
-import { authSelector } from '../app/features/auth/authSlice'
-import { useAppSelector } from '../hook'
+import { setAlert } from '../app/features/alert'
+import { useLogoutMutation } from '../app/features/auth/authApiSlice'
+import { authSelector, logOut } from '../app/features/auth/authSlice'
+import { useAppDispatch, useAppSelector } from '../hook'
 
 type Props = {}
 const Navbar: FC<Props> = () => {
   const auth = useAppSelector(authSelector)
+  const navigate = useNavigate()
+  const dispatch = useAppDispatch()
+  const [logOutApi, { data, isSuccess, isError }] = useLogoutMutation()
+  const handleLogout = async () => {
+    const data = await logOutApi()
+    if (isSuccess) {
+      dispatch(logOut)
+      navigate('/user/login')
+    }
+    if (isError) {
+      dispatch(setAlert({ message: 'unable to logout', type: 'error' }))
+    }
+  }
   const publicPath = [
     {
       path: '/user/login',
@@ -48,10 +63,22 @@ const Navbar: FC<Props> = () => {
         className="relative flex w-full flex-wrap items-center justify-between bg-neutral-900 py-2 text-neutral-200 shadow-lg lg:flex-wrap lg:justify-start lg:py-4"
         data-te-navbar-ref=""
       >
-        <div className="flex w-full flex-wrap items-center justify-between px-3">
+        <NavLink
+          className="absolute pr-2 text-xl font-semibold text-white"
+          to="/"
+        >
+          <img
+            src="/logo.png"
+            height="120"
+            width="100"
+            className="drop-shadow-lg"
+          />
+        </NavLink>
+        <div className="ml-[8vw] flex w-full flex-wrap items-center justify-between px-3">
           {/* Hamburger button for mobile view */}
+
           <button
-            className="block border-0 bg-transparent px-2 text-neutral-200 hover:no-underline hover:shadow-none focus:no-underline focus:shadow-none focus:outline-none focus:ring-0 lg:hidden"
+            className="ml-5 block border-0 bg-transparent px-2 text-neutral-200 hover:no-underline hover:shadow-none focus:no-underline focus:shadow-none focus:outline-none focus:ring-0 lg:hidden"
             type="button"
             data-te-collapse-init=""
             data-te-target="#navbarSupportedContent4"
@@ -82,17 +109,30 @@ const Navbar: FC<Props> = () => {
             data-te-collapse-item=""
           >
             {/* Navbar title */}
-            <a className="pr-2 text-xl font-semibold text-white" href="/">
-              Navbar
-            </a>
+
             {/* Left navigation links */}
+
             <ul
-              className="list-style-none mr-auto flex flex-col pl-0 lg:flex-row"
+              className="list-style-none flex flex-col pl-0 lg:flex-row w-full"
               data-te-navbar-nav-ref=""
             >
               {auth.validLogin
                 ? generateNav(ProtectedRoute)
                 : generateNav(publicPath)}
+              {auth.validLogin && (
+                <li
+                  className="my-4 lg:my-0 lg:pr-2 grow grid justify-end"
+                  data-te-nav-item-ref=""
+                >
+                  <button
+                    onClick={handleLogout}
+                    className="opacity-60 text-white disabled:text-black/30 lg:px-2 [&.active]:font-extrabold dark:[&.active]:text-neutral-400 grow"
+                    data-te-nav-link-ref=""
+                  >
+                    logout
+                  </button>
+                </li>
+              )}
             </ul>
           </div>
         </div>
