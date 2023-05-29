@@ -1,4 +1,10 @@
-import { issueToken, loginHandler, logOut, validateToken } from 'controller'
+import {
+  getPayload,
+  issueToken,
+  loginHandler,
+  logOut,
+  validateToken,
+} from 'controller'
 import { Router } from 'express'
 import { bodyValidator } from 'middleware'
 import { customRouteFunction } from 'utils'
@@ -17,5 +23,7 @@ authRouter.route('/login').post(
 )
 authRouter.route('/refresh').get(customRouteFunction(issueToken))
 authRouter.route('/validate').get(customRouteFunction(validateToken))
+authRouter.route('/payload').get(customRouteFunction(getPayload))
 authRouter.route('/logOut').post(customRouteFunction(logOut))
 export default authRouter
+console.log('from validate jwt')

@@ -27,6 +27,8 @@ app.use(helmet())
 
 app.use(initializePassport())
 const errorHandler: ErrorRequestHandler = (err, req, res) => {
+  console.log(err)
+
   if (err instanceof ZodError) {
     res.status(400)
     res.json(err.issues)

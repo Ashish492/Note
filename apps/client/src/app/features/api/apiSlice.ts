@@ -24,10 +24,13 @@ const baseQuery = retry(
       return headers
     },
   }),
-  { maxRetries: 0 },
+  { maxRetries: 1 },
 )
 const baseQueryWithReAuth: BaseQueryFn = async (args, api, extraOptions) => {
   let result = await baseQuery(args, api, extraOptions)
+
+  console.log(result?.error?.status)
+  console.log(result)
 
   if (result?.error?.status === 401) {
     console.log('sending refresh token')
@@ -35,7 +38,11 @@ const baseQueryWithReAuth: BaseQueryFn = async (args, api, extraOptions) => {
     if (!mutex.isLocked()) {
       const release = await mutex.acquire()
       try {
-        const refreshResult = await baseQuery('/refresh', api, extraOptions)
+        const refreshResult = await baseQuery(
+          '/auth/refresh',
+          api,
+          extraOptions,
+        )
 
         if (refreshResult?.data) {
           const credentials = refreshResult.data as Omit<Auth, 'validLogin'>

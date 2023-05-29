@@ -21,7 +21,7 @@ const noteApi = apiSlice
       }),
       addNote: builder.mutation<Note, Pick<Note, 'body' | 'title' | 'user'>>({
         query: note => ({
-          url: '/post',
+          url: '/note',
           body: note,
           method: 'post',
         }),

@@ -17,20 +17,28 @@ const AddNote: FC<Props> = props => {
   const [addPost, { isError, isLoading, error, isSuccess }] =
     useAddNoteMutation()
 
-  const onSubmit: SubmitHandler<Pick<Note, 'title' | 'body'>> = data => {
-    if (!user) return
-    addPost({ ...data, user: user._id })
-    if (isSuccess)
-      dispatch(setAlert({ message: 'note added', type: 'success' }))
-    if (isError)
+  const onSubmit: SubmitHandler<Pick<Note, 'title' | 'body'>> = async data => {
+    console.log(user)
+
+    if (!user) {
       dispatch(setAlert({ message: 'unable to add note', type: 'error' }))
+      return
+    }
+    try {
+      await addPost({ ...data, user: user._id }).unwrap()
+      dispatch(setAlert({ message: 'note added', type: 'success' }))
+    } catch (error) {
+      dispatch(setAlert({ message: 'unable to add note', type: 'error' }))
+      return
+    }
   }
   return (
     <>
-      <h4 className="mb-2 mt-0 text-2xl text-center font-medium leading-tight text-primary">
-        Add post
-      </h4>
-      {isLoading && <Loader />}
+      {isLoading && (
+        <div className="grid place-content-center mt-2">
+          <Loader isButton={false} />{' '}
+        </div>
+      )}
       <NoteForm onSubmit={onSubmit} />
     </>
   )

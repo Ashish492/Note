@@ -1,10 +1,10 @@
 import config from 'config'
 import createHttpError from 'http-errors'
-import { pick } from 'lodash'
+import { omit, pick } from 'lodash'
 import { findByEmail } from 'service'
 import { User } from 'shared-types'
 import { CustomRouteFunction } from 'types'
-import { signJWT, verifyJwt } from 'utils'
+import { decodedPayload, signJWT, verifyJwt } from 'utils'
 
 export const loginHandler: CustomRouteFunction<
   Pick<User, 'email' | 'password'>
@@ -54,7 +54,7 @@ export const logOut: CustomRouteFunction = async (req, res) => {
   res.clearCookie('refreshToken')
   res.json({ success: true, msg: 'logout successfully' })
 }
-export const validateToken: CustomRouteFunction = async (req, res) => {
+export const validateToken: CustomRouteFunction = async (req, res, next) => {
   const authHeader = req.headers.authorization
   if (authHeader && authHeader.startsWith('Bearer ')) {
     const token = authHeader.substring(7) // Remove 'Bearer ' from the beginning of the header value
@@ -64,6 +64,20 @@ export const validateToken: CustomRouteFunction = async (req, res) => {
     } else {
       throw new createHttpError[401]()
     }
+  } else {
+    // No Bearer token found in the headers
+    throw new createHttpError[403]()
+  }
+}
+export const getPayload: CustomRouteFunction = async (req, res) => {
+  const authHeader = req.headers.authorization
+  if (authHeader && authHeader.startsWith('Bearer ')) {
+    const token = authHeader.substring(7)
+
+    // Remove 'Bearer ' from the beginning of the header value
+    let payload = await decodedPayload(token)
+
+    res.json(omit(payload, ['iat', 'exp']))
   } else {
     // No Bearer token found in the headers
     throw new createHttpError[403]()

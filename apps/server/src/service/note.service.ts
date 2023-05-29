@@ -5,6 +5,8 @@ import { runService } from 'utils'
 import { Note } from '../../../../packages/shared-types/src'
 
 export const insertNote = async (note: Omit<Note, '_id' | 'starred'>) => {
+  console.log(note)
+
   return runService(() => NoteModel.create(note), 'unable to add note')
 }
 export const deleteNote = async (id: string) => {

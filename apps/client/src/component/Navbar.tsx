@@ -14,9 +14,9 @@ const Navbar: FC<Props> = () => {
   const dispatch = useAppDispatch()
   const [logOutApi, { data, isSuccess, isError }] = useLogoutMutation()
   const handleLogout = async () => {
-    const data = await logOutApi()
+    const data = await logOutApi().unwrap()
     if (isSuccess) {
-      dispatch(logOut)
+      dispatch(logOut())
       navigate('/user/login')
     }
     if (isError) {

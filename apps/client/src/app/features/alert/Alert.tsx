@@ -26,7 +26,7 @@ const Alert: FC<Props> = props => {
       opacity: 0,
       x: 2000,
       transition: {
-        duration: 0.7,
+        duration: 0.4,
         type: 'ease-in',
       },
     },

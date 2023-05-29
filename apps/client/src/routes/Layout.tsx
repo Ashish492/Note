@@ -14,7 +14,9 @@ const Layout: FC<Props> = props => {
     <>
       <Navbar />
       <Alert />
-      <Outlet />
+      <main className="min-h-[70vh]">
+        <Outlet />
+      </main>
       <Footer />
     </>
   )

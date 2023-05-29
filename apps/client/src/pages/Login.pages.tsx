@@ -23,22 +23,19 @@ const Login: FC<Props> = props => {
       ? localStorage.setItem('email', data.email)
       : localStorage.removeItem('email')
     delete data.remember
-    await login(data)
-    if (isError) {
-      dispatch(
-        setAlert({
-          message: (error as any)?.data?.message ?? 'server error',
-          type: 'error',
-        }),
-      )
-    }
-    if (isSuccess) {
+    try {
+      const result = await login(data).unwrap()
       if (result) {
         dispatch(setAuth({ token: result?.accessToken, user: result?.user }))
         navigate('/note')
       }
+    } catch (error) {
+      dispatch(
+        setAlert({ message: 'password or email incorrect', type: 'error' }),
+      )
     }
   }
+
   return (
     <>
       <LoginForm onHandleSubmit={handleSubmit} isLoading={isLoading} />

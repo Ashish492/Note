@@ -1,6 +1,5 @@
 import { Document, model, Schema } from 'mongoose'
-
-import { Note } from '../../../../packages/shared-types/src'
+import { Note } from 'shared-types'
 
 export type NoteDocument = Note & Document
 const noteSchema = new Schema(
@@ -12,7 +11,7 @@ const noteSchema = new Schema(
     body: {
       type: String,
     },
-    userId: {
+    user: {
       type: Schema.Types.ObjectId,
       ref: 'User',
     },
