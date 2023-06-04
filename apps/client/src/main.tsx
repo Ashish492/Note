@@ -1,4 +1,5 @@
 import './index.css'
+import 'tw-elements'
 
 import * as ReactDOM from 'react-dom/client'
 import { Provider } from 'react-redux'

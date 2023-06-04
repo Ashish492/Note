@@ -10,10 +10,20 @@ const ErrorElement: FC = () => {
   const error = useRouteError()
 
   if (isRouteErrorResponse(error)) {
+    alert('calling rote error')
     return <>{page(error.status, error.data)}</>
   }
+  if (error instanceof Response)
+    return <>{page(error.status ?? 500, (error as Response).statusText)}</>
 
-  return <>{page(500, (error as Error).message)}</>
+  return (
+    <>
+      {page(
+        (error as any)?.status ?? 500,
+        (error as any)?.data?.message ?? (error as Error).message,
+      )}
+    </>
+  )
 }
 function page(statusCode: number | string, msg: string) {
   const navigate = useNavigate()

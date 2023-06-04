@@ -1,4 +1,5 @@
-import { Note } from '../../../../../../packages/shared-types/src'
+import { Note } from 'shared-types'
+
 import { apiSlice } from '../api/apiSlice'
 
 const noteApi = apiSlice
@@ -19,6 +20,11 @@ const noteApi = apiSlice
               ]
             : [{ type: 'note', id: 'LIST' }],
       }),
+      getNoteById: builder.query<Note, Note['_id']>({
+        query: id => `/note/${id}`,
+        keepUnusedDataFor: 6000,
+        providesTags: (_result, _err, args) => [{ type: 'note', id: args }],
+      }),
       addNote: builder.mutation<Note, Pick<Note, 'body' | 'title' | 'user'>>({
         query: note => ({
           url: '/note',
@@ -27,29 +33,30 @@ const noteApi = apiSlice
         }),
         invalidatesTags: [{ type: 'note', id: 'LIST' }],
       }),
-      deleteNote: builder.mutation<Note, Pick<Note, '_id'>>({
+      deleteNote: builder.mutation<Note, Note['_id']>({
         query: note => ({
-          url: `/post/${note._id}`,
+          url: `/note/${note}`,
           method: 'delete',
         }),
-        invalidatesTags: (result, error, arg) => [
-          { type: 'note', id: arg._id },
-        ],
+        invalidatesTags: (result, error, arg) => [{ type: 'note', id: arg }],
       }),
       updateNote: builder.mutation<
         Note,
-        { body: Omit<Note, 'starred' | '_id' | 'user'>; id: string }
+        { body: Partial<Omit<Note, '_id' | 'user'>>; id: string }
       >({
         query: ({ body, id }) => ({
-          url: `/post/${id}`,
+          url: `/note/${id}`,
           body,
-          method: 'patch',
+          method: 'PATCH',
         }),
-        invalidatesTags: (result, error, arg) => [{ type: 'note', id: arg.id }],
+        invalidatesTags: (_result, _error, arg) => [
+          { type: 'note', id: arg.id },
+        ],
       }),
     }),
   })
 export const {
+  useGetNoteByIdQuery,
   useAddNoteMutation,
   useDeleteNoteMutation,
   useGetNoteQuery,

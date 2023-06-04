@@ -64,7 +64,7 @@ export const validateJwt = toolkit.createAsyncThunk(
       },
     )
     const user = await response.json()
-    console.log(user)
+    console.log('from validate')
 
     if (response.ok) {
       thunkApi.dispatch(setAuth({ token: localStorage.getItem('token'), user }))

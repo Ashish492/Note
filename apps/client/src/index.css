@@ -20,5 +20,9 @@
 }
 
 * {
-  box-sizing: border-box;
+  box-sizing: border-box !important;
+}
+
+.no-tailwind {
+  all: unset;
 }

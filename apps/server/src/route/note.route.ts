@@ -1,6 +1,7 @@
 import {
   createNoteHandler,
   deleteNoteHandler,
+  getNoteById,
   getNotes,
   updateNoteHandler,
 } from 'controller'
@@ -13,10 +14,6 @@ const noteRouter = Router()
 noteRouter
   .route('/')
   .get(customRouteFunction(getNotes))
-  .patch(
-    bodyValidator(NoteSchema.partial().omit({ _id: true })),
-    customRouteFunction(updateNoteHandler),
-  )
   .post(
     bodyValidator(
       NoteSchema.omit({
@@ -26,5 +23,12 @@ noteRouter
     ),
     customRouteFunction(createNoteHandler),
   )
-noteRouter.route(':_id').delete(customRouteFunction(deleteNoteHandler))
+noteRouter
+  .route('/:_id')
+  .delete(customRouteFunction(deleteNoteHandler))
+  .patch(
+    bodyValidator(NoteSchema.partial().omit({ _id: true })),
+    customRouteFunction(updateNoteHandler),
+  )
+  .get(customRouteFunction(getNoteById))
 export default noteRouter

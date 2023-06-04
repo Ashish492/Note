@@ -1,4 +1,5 @@
 import config from 'config'
+import { add } from 'date-fns'
 import createHttpError from 'http-errors'
 import { omit, pick } from 'lodash'
 import { findByEmail } from 'service'
@@ -15,26 +16,29 @@ export const loginHandler: CustomRouteFunction<
     if (!user) throw new Error()
     if (!user.comparePassword(req.body.password)) throw new Error('')
     const payload = pick(user.toObject(), ['_id', 'email'])
-    console.log(payload)
+
     const accessToken = await signJWT(payload, {
       expiresIn: config.get('accessTokenTtl'),
     })
     const refreshToken = await signJWT(payload, {
       expiresIn: config.get('refreshTokenTtl'),
     })
+
     res.cookie('refreshToken', refreshToken, {
       signed: true,
       httpOnly: true,
+      expires: add(new Date(), {
+        years: 1,
+      }),
     })
     res.send({ accessToken, user: payload })
   } catch (error) {
-    console.error(error)
     throw createHttpError(403, 'invalid email or password')
   }
 }
 export const issueToken: CustomRouteFunction = async (req, res) => {
   const { refreshToken } = req.signedCookies
-  console.log(refreshToken)
+
   if (!refreshToken) throw new createHttpError[403]()
   const { decoded, valid } = await verifyJwt(refreshToken)
   if (valid && decoded) {
@@ -45,7 +49,10 @@ export const issueToken: CustomRouteFunction = async (req, res) => {
         algorithm: 'RS256',
         expiresIn: config.get('accessTokenTtl'),
       })
-      return res.json({ token: accessToken, user: decoded })
+      return res.json({
+        token: accessToken,
+        user: omit(payload, ['iat', 'exp']),
+      })
     }
   }
   throw new createHttpError[403]()

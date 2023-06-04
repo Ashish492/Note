@@ -19,11 +19,9 @@ export function customRouteFunction<
 >(fn: CustomRouteFunction<B, P, Q>): basicFun<P, Q> {
   return (req, res, next) => {
     fn(req as MyRequest<B, P, Q>, res, next).catch((err: any) => {
-      res.status(err?.statusCode ?? err?.code ?? 500)
-      res.json({
-        success: false,
-        message: err.message ?? 'failed',
-      })
+      console.log('from async handler')
+
+      next(err)
     })
   }
 }
@@ -34,8 +32,6 @@ export const runService = async <T>(
   try {
     return await fn()
   } catch (error) {
-    console.log(error)
-
     throw createHttpError(500, msg ?? 'internal server Error', { cause: error })
   }
 }

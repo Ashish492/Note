@@ -7,7 +7,7 @@ const Footer: FC<Props> = props => {
     <>
       <>
         {/*Footer container*/}
-        <footer className="bg-neutral-900 text-center text-white">
+        <footer className="bg-neutral-900 text-center text-white z-[99999]">
           <div className="container px-6 pt-6">
             <div className="mb-6 flex justify-center">
               <a

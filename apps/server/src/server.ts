@@ -13,22 +13,22 @@ import routes from './routes'
 const app: Application = express()
 app.use(
   cors({
-    origin: 'http://localhost:5173', // Replace with the actual origin that should be allowed
-    credentials: true, // Enable credentials (e.g., cookies, authorization headers)
+    // origin: 'http://localhost:5173', // Replace with the actual origin that should be allowed
+    // credentials: true, // Enable credentials (e.g., cookies, authorization headers)
+    // methods: ['GET', 'HEAD', 'PUT', 'patch', 'POST', 'DELETE'],
+    origin: ['http://localhost:5173'],
+    credentials: true,
+    methods: ['GET', 'PUT', 'UPDATE', 'PATCH', 'DELETE'],
+    // preflightContinue: true,
   }),
 )
-
 app.use(urlencoded({ extended: true }))
 app.use(json())
 app.use(cookieParser(config.get('cookieSecret')))
-
 app.use(morgan('dev'))
 app.use(helmet())
-
 app.use(initializePassport())
-const errorHandler: ErrorRequestHandler = (err, req, res) => {
-  console.log(err)
-
+const errorHandler: ErrorRequestHandler = (err, req, res, _next) => {
   if (err instanceof ZodError) {
     res.status(400)
     res.json(err.issues)

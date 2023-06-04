@@ -7,6 +7,7 @@ import {
   LoginPages,
   NotePages,
   RegisterPages,
+  SingleNotePages,
 } from '../pages'
 import ErrorElement from './Error.pages'
 import Layout from './Layout'
@@ -40,6 +41,10 @@ const children: RouteObject[] = [
       {
         path: 'add',
         element: <AddNotePages />,
+      },
+      {
+        path: ':id',
+        element: <SingleNotePages />,
       },
     ],
   },
